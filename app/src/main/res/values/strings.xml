@@ -3,4 +3,6 @@
     <string name="show_result">Show Result</string>
     <string name="choose_label">Choose Label</string>
     <string name="take_picture">Take Picture</string>
+    <string name="actionbbar_icon">ActionbBar icon</string>
+    <string name="capturedimagepreview">CapturedImagePreview</string>
 </resources>
