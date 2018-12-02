@@ -14,8 +14,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="8dp"
-        android:contentDescription="@string/capturedimagepreview"
-        android:background="@android:drawable/alert_dark_frame"/>
+        android:contentDescription="@string/capturedimagepreview" />
 
     <Button
         android:id="@+id/btn_take_picture"
