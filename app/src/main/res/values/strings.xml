@@ -5,4 +5,5 @@
     <string name="take_picture">Take Picture</string>
     <string name="actionbbar_icon">ActionbBar icon</string>
     <string name="capturedimagepreview">CapturedImagePreview</string>
+    <string name="image_picker_error">Something is wrong with that image. Pick a different one please.</string>
 </resources>

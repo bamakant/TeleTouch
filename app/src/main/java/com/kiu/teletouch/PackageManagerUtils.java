@@ -1,4 +1,4 @@
-package com.tripathisolutions.teletouch;
+package com.kiu.teletouch;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;

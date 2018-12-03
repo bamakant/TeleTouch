@@ -1,4 +1,4 @@
-package com.tripathisolutions.teletouch;
+package com.kiu.teletouch;
 
 import org.junit.Test;
 

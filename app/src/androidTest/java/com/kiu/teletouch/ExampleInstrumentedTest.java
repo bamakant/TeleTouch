@@ -1,4 +1,4 @@
-package com.tripathisolutions.teletouch;
+package com.kiu.teletouch;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.tripathisolutions.teletouch", appContext.getPackageName());
+        assertEquals("com.kiu.teletouch", appContext.getPackageName());
     }
 }
