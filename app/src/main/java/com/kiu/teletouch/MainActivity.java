@@ -1,6 +1,7 @@
-package com.tripathisolutions.teletouch;
+package com.kiu.teletouch;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,8 +10,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnTakePicture, btnShowResult;
     private ImageView placeHolder;
-    private static final int requestCode = 2;
+    private static String imageDetails;
+    private static boolean imagePicked = false;
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyA3QVs_5seTzIo_gSqcZHH5GQAYnXfH1bg";
     public static final String FILE_NAME = "temp.jpg";
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "kant";
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    public static ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,18 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
         findViews();
 
-        btnTakePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startCamera();
-            }
-        });
+        pDialog = new ProgressDialog(MainActivity.this);
 
-        btnShowResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //show result on another activity
-            }
+        btnTakePicture.setOnClickListener(v -> startCamera());
+
+        btnShowResult.setOnClickListener(v -> {
+            //show result on another activity
+            if (imagePicked) {
+                Intent detailsIntent = new Intent(getApplicationContext(), ImageDetailsActivity.class);
+                detailsIntent.putExtra("imagedetails", imageDetails);
+                startActivity(detailsIntent);
+            } else Toast.makeText(this, "First Click an Image.", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -104,12 +108,14 @@ public class MainActivity extends AppCompatActivity {
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-       if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            imagePicked = true;
             uploadImage(photoUri);
         }
     }
@@ -244,16 +250,17 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             MainActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                TextView imageDetail = activity.findViewById(R.id.image_details);
-                imageDetail.setText(result);
+                //TextView imageDetail = activity.findViewById(R.id.image_details);
+                //imageDetail.setText(result);
+                pDialog.dismiss();
+                imageDetails = result;
             }
         }
     }
 
     private void callCloudVision(final Bitmap bitmap) {
         // Switch text to loading
-        mImageDetails.setText(R.string.loading_message);
-
+        showProcessingDialog();
         // Do the real work in an async task, because we need to use the network anyway
         try {
             AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
@@ -262,6 +269,14 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "failed to make API request because of other IOException " +
                     e.getMessage());
         }
+    }
+
+    private void showProcessingDialog() {
+        pDialog.setTitle("Processing");
+        pDialog.setMessage("Please wait, image is processing");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
@@ -285,13 +300,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("I found these things:\n\n");
+        StringBuilder message = new StringBuilder("I got these details : \n\n");
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
+        int count = 1;
         if (labels != null) {
             for (EntityAnnotation label : labels) {
-                message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
+                message.append(String.format(Locale.US, "%d: %s", count, label.getDescription()));
                 message.append("\n");
+                count++;
             }
         } else {
             message.append("nothing");
