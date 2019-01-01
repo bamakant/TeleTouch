@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static String imageDetails;
     private static boolean imagePicked = false;
 
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyA3QVs_5seTzIo_gSqcZHH5GQAYnXfH1bg";
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyDS6xcqCodkgmjxsucJ1cKeUD8Z_c5OaEo";
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
