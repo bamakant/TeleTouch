@@ -15,6 +15,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'CLOUD_VISION_API_KEY', CLOUD_VISION_API_KEY
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
