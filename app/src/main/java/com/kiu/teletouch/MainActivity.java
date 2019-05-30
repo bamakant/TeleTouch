@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private static String imageDetails;
     private static boolean imagePicked = false;
 
+    public static final String CLOUD_VISION_API_KEY = "AIzaSyDS6xcqCodkgmjxsucJ1cKeUD8Z_c5OaEo";
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
         VisionRequestInitializer requestInitializer =
-                new VisionRequestInitializer(BuildConfig.CLOUD_VISION_API_KEY) {
+                new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
                     /**
                      * We override this so we can inject important identifying fields into the HTTP
                      * headers. This enables use of a restricted cloud platform API key.
